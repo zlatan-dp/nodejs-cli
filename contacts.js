@@ -20,14 +20,19 @@ async function listContacts() {
 
 async function getContactById(contactId) {
   const contacts = await listContacts();
-  const contactById = contacts.filter((contact) => contact.id === contactId);
+  const contactById = contacts.find((contact) => contact.id === contactId);
   return contactById ? contactById : null;
 }
 
 async function removeContact(contactId) {
   const contacts = await readDb();
+  const index = contacts.findIndex((contact) => contact.id === contactId);
+  if (index === -1) {
+    return null;
+  }
   const updateContacts = contacts.filter((contact) => contact.id !== contactId);
   await writeDb(updateContacts);
+  return updateContacts;
 }
 
 async function addContact(name, email, phone) {
